@@ -26,7 +26,7 @@ public class FileReceiveByServer implements Runnable {
 
 	/*配置JDBC相关信息*/
 	static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-	static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/fileserver?characterEncoding=utf-8&useSSL=true";
+	static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/fileserver?serverTimezone=GMT";
 
 	//数据库的账号和密码
 	static final String USER = "root";
@@ -35,7 +35,7 @@ public class FileReceiveByServer implements Runnable {
 	Connection conn = null;
 	Statement stmt = null;
 
-	boolean flag = true;
+	boolean flag = true;//判断是否需要上传的标志
 
 	/**
 	 * 服务器与客户端通信的连接(管道)
@@ -125,7 +125,7 @@ public class FileReceiveByServer implements Runnable {
 		/*客户端文件上传的信息写入服务器端的数据库中*/
 		try {
 			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/fileserver?serverTimezone=GMT", USER, PASS);
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
 			stmt = conn.createStatement();
 			String sql = "insert into fileinfo(name,size,hash,ip) values (?,?,?,?)"; //使用占位符
 			PreparedStatement sta = conn.prepareStatement(sql);
